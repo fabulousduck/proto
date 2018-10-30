@@ -1,0 +1,76 @@
+use printer
+use fread from io
+use stdlib
+
+class plane {
+    pub  string public_thing  = "a public string";
+    priv string private_thing = "a private thing";
+    string default_public_thing = "a default public string"
+    pub fn some_public_thing(string some_string_variable) string {
+        printer.print(this.public_string, some_string_variable);
+        return printed
+    }
+    //functions without a return type will be assumed to be void
+    pub fn construct() {
+
+    }
+
+}
+
+fn genericFunction(any genericParameter) {
+    printer.print(genericParameter)
+}
+
+fn thing(plane plane) string {
+    return plane->public_string;
+}
+
+fn doSwitch(int option) void {
+    switch option {
+        case 1:
+            break;
+        case 2:
+            break;
+        default:
+            break;
+    }
+}
+
+fn main() {
+    //this is a comment
+    /*
+        this is a
+        multiline comment
+    */
+
+    int[] array := [1,2,3,4,5];
+    int integer := 1;
+    string meme := "something";
+    bool thing := true;
+    float afloat := 1.2;
+    int hex_litteral := 0x00FF;
+
+    if(integer < afloat) {
+        printer.print(50);
+    } else if(integer > afloat) {
+
+    } else{
+
+    }
+
+    for(int i = 0; i  < 20; i++) {
+
+    }
+
+    int a := 1 + 2;
+    int a := 2 - 3;
+    int a := 1 * 2;
+    float a := 1 / 2;
+
+
+    plane myplane := new plane;
+    string planeThing := myplane
+        .thing("thing");
+
+
+}
