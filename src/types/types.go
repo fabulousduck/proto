@@ -1,7 +1,11 @@
 package types
 
+import (
+	"strings"
+)
+
 //DetermineType takes a char and determines its type
-func DetermineType(str string) string {
+func DetermineType(str string) (string, string) {
 	chars := []string{
 		"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
 		"N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "_",
@@ -41,19 +45,56 @@ func DetermineType(str string) string {
 		")":  "right_round_bracket",
 	}
 
+	ignorables := map[string]string{
+		"\r": "win_return",
+		"\n": "newline",
+		"\t": "tab",
+		" ":  "space",
+	}
+
+	if val, ok := ignorables[str]; ok {
+		return "ignoreable", val
+	}
+
 	if contains(str, chars) {
-		return "char"
+		return "char", str
 	}
 
 	if contains(str, numbers) {
-		return "number"
+		return "number", str
 	}
 
 	if val, ok := singleOperators[str]; ok {
-		return val
+		return "operator", val
 	}
 
-	return "undefined_character"
+	if str == " " {
+		return "space", str
+	}
+
+	return "", "undefined_character"
+}
+
+//IsValidDoubleOperator determines if 2 characters make a valid double operator
+func IsValidDoubleOperator(base string, next string) (string, bool) {
+	combinedOperator := strings.Join([]string{base, next}, "")
+
+	operators := map[string]string{
+		"==": "exact_equals",
+		"=>": "equals_greater",
+		"=<": "equals_smaller",
+		"++": "increment",
+		"--": "decrement",
+		"->": "arrow",
+		":=": "double_dick",
+		"/*": "open_multiline_comment",
+		"*/": "close_multiline_comment",
+	}
+
+	if val, ok := operators[combinedOperator]; ok {
+		return val, true
+	}
+	return "", false
 }
 
 func contains(name string, list []string) bool {
@@ -63,4 +104,11 @@ func contains(name string, list []string) bool {
 		}
 	}
 	return false
+}
+
+//IsLitChar checks if a char is valid hex numeral
+func IsLitChar(char string) bool {
+	litChars := []string{"A", "B", "C", "D", "E", "F", "a", "b", "c", "d", "e", "f"}
+
+	return contains(char, litChars)
 }

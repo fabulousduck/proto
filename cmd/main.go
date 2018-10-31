@@ -1,7 +1,12 @@
 package main
 
-import "github.com/fabulousduck/proto"
+import (
+	"github.com/davecgh/go-spew/spew"
+	"github.com/fabulousduck/proto"
+)
 
 func main() {
-	proto.Runfile("examples/example.po")
+	p := proto.NewProto()
+	p.RunFile("examples/example.po")
+	spew.Dump(p.Tokens)
 }

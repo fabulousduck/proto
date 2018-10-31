@@ -17,12 +17,14 @@ class plane {
 
 }
 
+strinng something := (a+b) * c 
+
 fn genericFunction(any genericParameter) {
     printer.print(genericParameter)
 }
 
 fn thing(plane plane) string {
-    return plane->public_string;
+    return plane.public_string;
 }
 
 fn doSwitch(int option) void {

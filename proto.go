@@ -3,21 +3,24 @@ package proto
 import (
 	"io/ioutil"
 	"os"
+
+	"github.com/fabulousduck/proto/src/lexer"
+	"github.com/fabulousduck/proto/src/tokens"
 )
 
-//proto : Defines the global attributes of the interpreter
-type proto struct {
-	Tokens   []*token
+//Proto : Defines the global attributes of the interpreter
+type Proto struct {
+	Tokens   []*tokens.Token
 	HadError bool
 }
 
-//Newproto : Creates a new proto instance
-func Newproto() *proto {
-	return new(proto)
+//NewProto : Creates a new proto instance
+func NewProto() *Proto {
+	return new(Proto)
 }
 
 //RunFile : Interprets a given file
-func (proto *proto) RunFile(filename string) {
+func (proto *Proto) RunFile(filename string) {
 	file, err := ioutil.ReadFile(filename)
 	if err != nil {
 		panic(err)
@@ -28,12 +31,13 @@ func (proto *proto) RunFile(filename string) {
 	}
 }
 
-func (proto *proto) run(sourceCode string, filename string) {
-	l := new(lexer)
-	l.lex(sourceCode, filename)
-	p := NewParser(filename)
-	p.ast, _ = p.parse(l.tokens)
-	i := newInterpreter()
-	i.interpret(p.ast)
+func (proto *Proto) run(sourceCode string, filename string) {
+	l := new(lexer.Lexer)
+	l.Lex(sourceCode, filename)
+	proto.Tokens = l.Tokens
+	// p := NewParser(filename)
+	// p.ast, _ = p.parse(l.tokens)
+	// i := newInterpreter()
+	// i.interpret(p.ast)
 
 }
