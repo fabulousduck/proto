@@ -34,8 +34,12 @@ func NewParser() *Parser {
 //Parse takes a set of tokens from the lexer and turns them into statements
 func (p *Parser) Parse(tokens []*tokens.Token) {
 	tokensConsumed := 0
-
+	nodes := []*Node{}
 	for tokensConsumed < len(tokens) {
-
+		currentToken := tokens[tokensConsumed]
+		switch currentToken.Type {
+		case "":
+			break
+		}
 	}
 }

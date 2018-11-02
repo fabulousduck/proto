@@ -2,6 +2,8 @@ package types
 
 import (
 	"strings"
+
+	"github.com/fabulousduck/proto/src/tokens"
 )
 
 //DetermineType takes a char and determines its type
@@ -73,6 +75,22 @@ func DetermineType(str string) (string, string) {
 	}
 
 	return "", "undefined_character"
+}
+
+//CheckKeywords checks if the given string is a keyword in the language
+func CheckKeywords(token *tokens.Token) {
+	keywords := map[string]string{
+		"int":    "integer",
+		"bool":   "boolean",
+		"string": "string_litteral",
+		"float":  "floating_point_integer",
+		"class":  "class",
+	}
+
+	if val, ok := keywords[token.Value]; ok {
+		token.Type = val
+	}
+
 }
 
 //IsValidDoubleOperator determines if 2 characters make a valid double operator

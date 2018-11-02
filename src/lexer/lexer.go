@@ -76,10 +76,12 @@ func (l *Lexer) Lex(sourceCode string, filename string) {
 			l.currentIndex++
 
 		}
+
+		types.CheckKeywords(currTok)
+
 		if appendToken {
 			l.Tokens = append(l.Tokens, currTok)
 		}
-
 	}
 }
 
