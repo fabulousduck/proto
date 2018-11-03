@@ -58,11 +58,11 @@ func DetermineType(str string) (string, string) {
 		return "ignoreable", val
 	}
 
-	if contains(str, chars) {
+	if Contains(str, chars) {
 		return "char", str
 	}
 
-	if contains(str, numbers) {
+	if Contains(str, numbers) {
 		return "number", str
 	}
 
@@ -115,7 +115,8 @@ func IsValidDoubleOperator(base string, next string) (string, bool) {
 	return "", false
 }
 
-func contains(name string, list []string) bool {
+//Contains checks is a variable of type string N is present in given list V
+func Contains(name string, list []string) bool {
 	for i := 0; i < len(list); i++ {
 		if string(list[i]) == name {
 			return true
@@ -128,5 +129,5 @@ func contains(name string, list []string) bool {
 func IsLitChar(char string) bool {
 	litChars := []string{"A", "B", "C", "D", "E", "F", "a", "b", "c", "d", "e", "f"}
 
-	return contains(char, litChars)
+	return Contains(char, litChars)
 }
