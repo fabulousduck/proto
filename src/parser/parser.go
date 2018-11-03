@@ -48,10 +48,12 @@ func NewParser() *Parser {
 func (p *Parser) Parse(tokens []*tokens.Token) {
 	tokensConsumed := 0
 	nodes := []*Node{}
+
 	for tokensConsumed < len(tokens) {
 		currentToken := tokens[tokensConsumed]
 		switch currentToken.Type {
-		case "int":
+		case "integer":
+
 			if tokens[tokensConsumed+1].Type == "left_square_bracket" {
 				list, consumed := p.createList(tokens, tokensConsumed, "int")
 				tokensConsumed += consumed
@@ -83,6 +85,7 @@ func (p *Parser) createIntegerVariable(tokens []*tokens.Token, index int) (Node,
 	tokensConsumed++
 
 	p.expect([]string{"number"}, tokens[index+tokensConsumed])
+	v.Value = tokens[index+tokensConsumed].Value
 	tokensConsumed++
 
 	p.expect([]string{"semi_colon"}, tokens[index+tokensConsumed])
