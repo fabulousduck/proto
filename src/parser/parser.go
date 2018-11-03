@@ -4,6 +4,8 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/davecgh/go-spew/spew"
+
 	"github.com/fabulousduck/proto/src/err"
 	"github.com/fabulousduck/proto/src/tokens"
 	"github.com/fabulousduck/proto/src/types"
@@ -88,10 +90,11 @@ func (p *Parser) createIntegerVariable(tokens []*tokens.Token, index int) (Node,
 	p.expect([]string{"double_dick"}, tokens[index+tokensConsumed])
 	tokensConsumed++
 
-	p.expect([]string{"number", "hex_litteral"}, tokens[index+tokensConsumed])
+	p.expect([]string{"integer", "hex_litteral"}, tokens[index+tokensConsumed])
 	v.Value = tokens[index+tokensConsumed].Value
 	tokensConsumed++
 
+	spew.Dump(tokens[index+tokensConsumed])
 	p.expect([]string{"semi_colon"}, tokens[index+tokensConsumed])
 	tokensConsumed++
 
@@ -111,9 +114,9 @@ func (p *Parser) createList(tokens []*tokens.Token, index int, listType string) 
 	p.expect([]string{"left_square_bracket"}, tokens[index+tokensConsumed])
 	tokensConsumed++
 
-	p.expect([]string{"number", "right_square_bracket"}, tokens[index+tokensConsumed])
+	p.expect([]string{"integer", "right_square_bracket"}, tokens[index+tokensConsumed])
 
-	if tokens[index+tokensConsumed].Type == "number" {
+	if tokens[index+tokensConsumed].Type == "integer" {
 		listSize, _ := strconv.Atoi(tokens[index+tokensConsumed].Value)
 		list.Size = listSize
 		tokensConsumed++
@@ -149,7 +152,7 @@ func (p *Parser) createList(tokens []*tokens.Token, index int, listType string) 
 		}
 
 	}
-
+	spew.Dump(tokens[index+tokensConsumed])
 	p.expect([]string{"semi_colon"}, tokens[index+tokensConsumed])
 	tokensConsumed++
 

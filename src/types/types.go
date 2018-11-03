@@ -63,7 +63,7 @@ func DetermineType(str string) (string, string) {
 	}
 
 	if Contains(str, numbers) {
-		return "number", str
+		return "integer", str
 	}
 
 	if val, ok := singleOperators[str]; ok {

@@ -61,7 +61,7 @@ func (l *Lexer) Lex(sourceCode string, filename string) {
 		case "ignoreable":
 			appendToken = false
 			l.currentIndex++
-		case "number":
+		case "integer":
 			if l.Peek() == "x" {
 				l.currentIndex += 2
 				currTok.Value = l.LexHexLitteral()
@@ -106,7 +106,7 @@ func (l *Lexer) PeekN(t string) string {
 //LexHexLitteral lexes a hexlitteral;
 func (l *Lexer) LexHexLitteral() string {
 	var buffer bytes.Buffer
-	for i, value := types.DetermineType(l.Peek()); i == "char" || i == "number"; i, value = types.DetermineType(l.Peek()) {
+	for i, value := types.DetermineType(l.Peek()); i == "char" || i == "integer"; i, value = types.DetermineType(l.Peek()) {
 
 		if !types.IsLitChar(value) && i == "char" {
 			err.ThrowInvalidHexLitteralError()
