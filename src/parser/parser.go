@@ -72,8 +72,8 @@ func (p *Parser) Parse(tokens []*tokens.Token) {
 			nodes = append(nodes, &variable)
 		}
 	}
-
 	p.Ast = nodes
+	spew.Dump(p.Ast)
 }
 
 func (p *Parser) createIntegerVariable(tokens []*tokens.Token, index int) (Node, int) {
@@ -94,7 +94,6 @@ func (p *Parser) createIntegerVariable(tokens []*tokens.Token, index int) (Node,
 	v.Value = tokens[index+tokensConsumed].Value
 	tokensConsumed++
 
-	spew.Dump(tokens[index+tokensConsumed])
 	p.expect([]string{"semi_colon"}, tokens[index+tokensConsumed])
 	tokensConsumed++
 
@@ -107,6 +106,7 @@ func (p *Parser) createIntegerVariable(tokens []*tokens.Token, index int) (Node,
 func (p *Parser) createList(tokens []*tokens.Token, index int, listType string) (Node, int) {
 	list := new(list)
 	tokensConsumed := 0
+	sizeSet := false
 
 	list.Type = listType
 	tokensConsumed++
@@ -119,10 +119,10 @@ func (p *Parser) createList(tokens []*tokens.Token, index int, listType string) 
 	if tokens[index+tokensConsumed].Type == "integer" {
 		listSize, _ := strconv.Atoi(tokens[index+tokensConsumed].Value)
 		list.Size = listSize
-		tokensConsumed++
-	} else {
+		sizeSet = true
 		tokensConsumed++
 	}
+	tokensConsumed++
 
 	p.expect([]string{"char", "string"}, tokens[index+tokensConsumed])
 	list.Name = tokens[index+tokensConsumed].Value
@@ -140,7 +140,7 @@ func (p *Parser) createList(tokens []*tokens.Token, index int, listType string) 
 	} else {
 		tokensConsumed++
 
-		for currentToken := tokens[index+tokensConsumed]; currentToken.Value != "right_square_bracket"; currentToken = tokens[index+tokensConsumed] {
+		for currentToken := tokens[index+tokensConsumed]; currentToken.Type != "right_square_bracket"; currentToken = tokens[index+tokensConsumed] {
 			p.expect([]string{listType, "comma"}, currentToken)
 			if currentToken.Type == "comma" {
 				p.expect([]string{listType}, tokens[index+tokensConsumed+1])
@@ -152,10 +152,15 @@ func (p *Parser) createList(tokens []*tokens.Token, index int, listType string) 
 		}
 
 	}
-	spew.Dump(tokens[index+tokensConsumed])
-	p.expect([]string{"semi_colon"}, tokens[index+tokensConsumed])
+
+	//skip the right square bracket
 	tokensConsumed++
 
+	p.expect([]string{"semi_colon"}, tokens[index+tokensConsumed])
+	tokensConsumed++
+	if !sizeSet {
+		list.Size = len(list.Values)
+	}
 	return list, tokensConsumed
 }
 

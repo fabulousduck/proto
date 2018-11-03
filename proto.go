@@ -4,8 +4,6 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/davecgh/go-spew/spew"
-
 	"github.com/fabulousduck/proto/src/lexer"
 	"github.com/fabulousduck/proto/src/parser"
 	"github.com/fabulousduck/proto/src/tokens"
@@ -38,7 +36,6 @@ func (proto *Proto) run(sourceCode string, filename string) {
 	l := new(lexer.Lexer)
 	l.Lex(sourceCode, filename)
 	proto.Tokens = l.Tokens
-	spew.Dump(l.Tokens)
 	p := parser.NewParser()
 	p.Parse(l.Tokens)
 	// i := newInterpreter()
