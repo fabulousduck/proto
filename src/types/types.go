@@ -110,7 +110,9 @@ func IsValidDoubleOperator(base string, next string) (string, bool) {
 	}
 
 	if val, ok := operators[combinedOperator]; ok {
+
 		return val, true
+
 	}
 	return "", false
 }

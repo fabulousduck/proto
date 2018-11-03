@@ -47,6 +47,7 @@ func (l *Lexer) Lex(sourceCode string, filename string) {
 					l.currentIndex += 2
 					break
 				}
+
 			}
 			currTok.Value = currentChar
 			l.currentIndex++
@@ -56,7 +57,6 @@ func (l *Lexer) Lex(sourceCode string, filename string) {
 				currTok.Type = "string"
 				break
 			}
-			l.currentIndex++
 
 		case "ignoreable":
 			appendToken = false
@@ -69,8 +69,6 @@ func (l *Lexer) Lex(sourceCode string, filename string) {
 				break
 			}
 			currTok.Value = l.PeekN(currTok.Type)
-
-			l.currentIndex++
 
 		case "undefined_character":
 			l.currentIndex++
@@ -100,7 +98,6 @@ func (l *Lexer) PeekN(t string) string {
 		buffer.WriteString(string(l.source[l.currentIndex]))
 		l.currentIndex++
 	}
-
 	buffer.WriteString(string(l.source[l.currentIndex]))
 	l.currentIndex++
 	return buffer.String()

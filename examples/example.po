@@ -46,6 +46,8 @@ fn main() {
     */
 
     int[] array := [1,2,3,4,5];
+        array.pushBack(6)
+             .pushFront(0);
     int integer := 1;
     string meme := "something";
     bool thing := true;

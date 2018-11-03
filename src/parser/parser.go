@@ -1,7 +1,10 @@
 package parser
 
 import (
-	"github.com/davecgh/go-spew/spew"
+	"os"
+	"strconv"
+
+	"github.com/fabulousduck/proto/src/err"
 	"github.com/fabulousduck/proto/src/tokens"
 	"github.com/fabulousduck/proto/src/types"
 )
@@ -22,10 +25,12 @@ func (v *variable) getNodeName() string {
 }
 
 type list struct {
-	Name   string
-	Type   string
-	Values map[string]string
-	Length int
+	Name                  string
+	Type                  string
+	Values                []string
+	isReferenceTo         bool
+	referenceVariableName string
+	Size                  int
 }
 
 func (l *list) getNodeName() string {
@@ -55,14 +60,13 @@ func (p *Parser) Parse(tokens []*tokens.Token) {
 		case "integer":
 
 			if tokens[tokensConsumed+1].Type == "left_square_bracket" {
-				list, consumed := p.createList(tokens, tokensConsumed, "int")
+				list, consumed := p.createList(tokens, tokensConsumed, "integer")
 				tokensConsumed += consumed
 				nodes = append(nodes, &list)
 				break
 			}
 			variable, consumed := p.createIntegerVariable(tokens, tokensConsumed)
 			tokensConsumed += consumed
-			spew.Dump(variable)
 			nodes = append(nodes, &variable)
 		}
 	}
@@ -81,10 +85,10 @@ func (p *Parser) createIntegerVariable(tokens []*tokens.Token, index int) (Node,
 	v.Name = tokens[index+tokensConsumed].Value
 	tokensConsumed++
 
-	p.expect([]string{"equals"}, tokens[index+tokensConsumed])
+	p.expect([]string{"double_dick"}, tokens[index+tokensConsumed])
 	tokensConsumed++
 
-	p.expect([]string{"number"}, tokens[index+tokensConsumed])
+	p.expect([]string{"number", "hex_litteral"}, tokens[index+tokensConsumed])
 	v.Value = tokens[index+tokensConsumed].Value
 	tokensConsumed++
 
@@ -94,15 +98,68 @@ func (p *Parser) createIntegerVariable(tokens []*tokens.Token, index int) (Node,
 	return v, tokensConsumed
 }
 
+//int[] c := [1,2,3,4,5,6];
+//int[10] d := [0,1,2,3,4,5,6,7,8,9];
+//int[] e := c;
 func (p *Parser) createList(tokens []*tokens.Token, index int, listType string) (Node, int) {
 	list := new(list)
 	tokensConsumed := 0
+
+	list.Type = listType
+	tokensConsumed++
+
+	p.expect([]string{"left_square_bracket"}, tokens[index+tokensConsumed])
+	tokensConsumed++
+
+	p.expect([]string{"number", "right_square_bracket"}, tokens[index+tokensConsumed])
+
+	if tokens[index+tokensConsumed].Type == "number" {
+		listSize, _ := strconv.Atoi(tokens[index+tokensConsumed].Value)
+		list.Size = listSize
+		tokensConsumed++
+	} else {
+		tokensConsumed++
+	}
+
+	p.expect([]string{"char", "string"}, tokens[index+tokensConsumed])
+	list.Name = tokens[index+tokensConsumed].Value
+	tokensConsumed++
+
+	p.expect([]string{"double_dick"}, tokens[index+tokensConsumed])
+	tokensConsumed++
+
+	//read out all the values of the list into the list struct
+	p.expect([]string{"char", "string", "left_square_bracket"}, tokens[index+tokensConsumed])
+	if tokens[index+tokensConsumed].Type != "left_square_bracket" {
+		list.isReferenceTo = true
+		list.referenceVariableName = tokens[index+tokensConsumed].Value
+		tokensConsumed++
+	} else {
+		tokensConsumed++
+
+		for currentToken := tokens[index+tokensConsumed]; currentToken.Value != "right_square_bracket"; currentToken = tokens[index+tokensConsumed] {
+			p.expect([]string{listType, "comma"}, currentToken)
+			if currentToken.Type == "comma" {
+				p.expect([]string{listType}, tokens[index+tokensConsumed+1])
+				tokensConsumed++
+				continue
+			}
+			list.Values = append(list.Values, currentToken.Value)
+			tokensConsumed++
+		}
+
+	}
+
+	p.expect([]string{"semi_colon"}, tokens[index+tokensConsumed])
+	tokensConsumed++
 
 	return list, tokensConsumed
 }
 
 func (p *Parser) expect(list []string, token *tokens.Token) {
 	if !types.Contains(token.Type, list) {
-
+		//TODO better error handling than this lmao
+		err.ThrowSemanticError(token, list, "")
+		os.Exit(65)
 	}
 }
