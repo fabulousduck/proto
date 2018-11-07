@@ -137,20 +137,22 @@ func (p *Parser) createList(tokens []*tokens.Token, index int, listType string) 
 		list.isReferenceTo = true
 		list.referenceVariableName = tokens[index+tokensConsumed].Value
 		tokensConsumed++
-	} else {
+		spew.Dump(list)
+		p.expect([]string{"semi_colon"}, tokens[index+tokensConsumed])
 		tokensConsumed++
+		return list, tokensConsumed
+	}
+	tokensConsumed++
 
-		for currentToken := tokens[index+tokensConsumed]; currentToken.Type != "right_square_bracket"; currentToken = tokens[index+tokensConsumed] {
-			p.expect([]string{listType, "comma"}, currentToken)
-			if currentToken.Type == "comma" {
-				p.expect([]string{listType}, tokens[index+tokensConsumed+1])
-				tokensConsumed++
-				continue
-			}
-			list.Values = append(list.Values, currentToken.Value)
+	for currentToken := tokens[index+tokensConsumed]; currentToken.Type != "right_square_bracket"; currentToken = tokens[index+tokensConsumed] {
+		p.expect([]string{listType, "comma"}, currentToken)
+		if currentToken.Type == "comma" {
+			p.expect([]string{listType}, tokens[index+tokensConsumed+1])
 			tokensConsumed++
+			continue
 		}
-
+		list.Values = append(list.Values, currentToken.Value)
+		tokensConsumed++
 	}
 
 	//skip the right square bracket
