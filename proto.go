@@ -36,8 +36,8 @@ func (proto *Proto) run(sourceCode string, filename string) {
 	l := new(lexer.Lexer)
 	l.Lex(sourceCode, filename)
 	proto.Tokens = l.Tokens
-	p := parser.NewParser()
-	p.Parse(l.Tokens)
+	p := parser.NewParser(l.Tokens)
+	p.Parse()
 	// i := newInterpreter()
 	// i.interpret(p.ast)
 

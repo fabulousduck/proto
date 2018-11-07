@@ -82,7 +82,7 @@ func CheckKeywords(token *tokens.Token) {
 	keywords := map[string]string{
 		"int":    "integer",
 		"bool":   "boolean",
-		"string": "string_litteral",
+		"string": "string_literal",
 		"float":  "floating_point_integer",
 		"class":  "class",
 	}
