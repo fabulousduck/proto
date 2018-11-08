@@ -8,3 +8,7 @@ general perpose interpreted language in go
 ### Arrays
 
 arrays are classes in the background so we can easily append functions to them.
+
+### Expressions
+
+Them shits recursive now
