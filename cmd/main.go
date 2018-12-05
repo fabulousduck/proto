@@ -6,5 +6,5 @@ import (
 
 func main() {
 	p := proto.NewProto()
-	p.RunFile("examples/test.po")
+	p.RunFile("examples/expression.prot")
 }
